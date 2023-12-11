@@ -1,50 +1,62 @@
 package br.inatel.labs.labjpa.service;
 
-import java.util.List;
-
+import br.inatel.labs.labjpa.entity.NotaCompra;
+import br.inatel.labs.labjpa.entity.NotaCompraItem;
+import br.inatel.labs.labjpa.repository.NotaCompraItemRepository;
+import br.inatel.labs.labjpa.repository.NotaCompraRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.inatel.labs.labjpa.entity.NotaCompra;
-import br.inatel.labs.labjpa.entity.NotaCompraItem;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class NotaCompraService {
 
-	@PersistenceContext
-	private EntityManager em;
-	
-	public NotaCompra salvarNotaCompra(NotaCompra nc) {
-		return em.merge(nc);
-	}
-	
-	public NotaCompra buscarNotaCompraPeloId(Long id) {
-		return em.find(NotaCompra.class, id);
-	}
-	
-	public NotaCompra buscarNotaCompraPeloIdComListaItem(Long id) {
-		NotaCompra notaCompra = em.find(NotaCompra.class, id);
-		notaCompra.getListaNotaCompraItem().size();
-		return notaCompra; 
-	}
-	
-	public List<NotaCompra> listarNotaCompra(){
-		return em.createQuery("select n from NotaCompra n", NotaCompra.class).getResultList();
-	}
-	
-	public NotaCompraItem salvarNotaCompraItem(NotaCompraItem item) {
-		return em.merge(item);
-	}
-	
-	public NotaCompraItem buscarNotaCompraItemPeloId(Long id) {
-		return em.find(NotaCompraItem.class, id);
-	}
-	
-	public List<NotaCompraItem> listarNotaCompraItem(){
-		return em.createQuery("select i from NotaCompraItem i", NotaCompraItem.class).getResultList();
-	}
-	
+    @Autowired
+    private NotaCompraRepository notaCompraRepository;
+
+    @Autowired
+    private NotaCompraItemRepository notaCompraItemRepository;
+
+    //1.Nota compra
+    public NotaCompra salvarNotaCompra(NotaCompra nc) {
+        return notaCompraRepository.save(nc);
+    }
+
+    public Optional<NotaCompra> buscarNotaCompraPeloId(Long id) {
+        return notaCompraRepository.findById(id);
+    }
+
+    public NotaCompra buscarNotaCompraPeloIdComListaItem(Long id) {
+        Optional<NotaCompra> opNotaCompra = notaCompraRepository.findById(id);
+        if(opNotaCompra.isPresent()){
+            NotaCompra notaCompra = opNotaCompra.get();
+            notaCompra.getListaNotaCompraItem().size();
+            return notaCompra;
+        }
+        else {
+            throw new RuntimeException("Nenhuma nota compra encontrada");
+        }
+    }
+
+    public List<NotaCompra> listaNotaCompra(){
+        return notaCompraRepository.findAll();
+    }
+
+    //2.Nota Compra Item
+    public NotaCompraItem salvarNotaCompraItem(NotaCompraItem item) {
+        return notaCompraItemRepository.save(item);
+    }
+
+    public Optional<NotaCompraItem> buscarNotaCompraItemPeloId(Long id) {
+        return notaCompraItemRepository.findById(id);
+    }
+
+    public List<NotaCompraItem> listarNotaCompraItem(){
+        return notaCompraItemRepository.findAll();
+    }
+
 }

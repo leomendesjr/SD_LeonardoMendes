@@ -1,115 +1,109 @@
 package br.inatel.labs.labjpa.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 import java.util.Objects;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
 @Entity
 public class NotaCompraItem {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
-	
-	@ManyToOne
-	private NotaCompra notaCompra;
-	
-	@ManyToOne
-	private Produto produto;
-	
-	@NotNull
-	@Positive
-	private BigDecimal valorCompraProduto;
-	
-	@NotNull
-	@Positive
-	private Integer quantidade=1;
-	
-	public NotaCompraItem() {
-		
-	}
-	
-	public NotaCompraItem(NotaCompra notaCompra, Produto produto, BigDecimal valorCompraProduto, Integer quantidade) {
-		super();
-		this.notaCompra = notaCompra;
-		this.produto = produto;
-		this.valorCompraProduto = valorCompraProduto;
-		this.quantidade = quantidade;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	public BigDecimal getCalculoTotalItem(){
-		return valorCompraProduto.multiply(BigDecimal.valueOf(quantidade));
-	}
+    @NotNull
+    private BigDecimal valorCompraProduto;
 
-	public long getId() {
-		return id;
-	}
+    @NotNull
+    private Integer quantidade;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    @NotNull
+    @ManyToOne
+    private NotaCompra notaCompra;
 
-	public NotaCompra getNotaCompra() {
-		return notaCompra;
-	}
+    @NotNull
+    @ManyToOne
+    private Produto produto;
 
-	public void setNotaCompra(NotaCompra notaCompra) {
-		this.notaCompra = notaCompra;
-	}
+    //construtores
+    public NotaCompraItem() {}
 
-	public Produto getProduto() {
-		return produto;
-	}
+    public NotaCompraItem(NotaCompra notaCompra, Produto produto, BigDecimal valorCompraProduto, Integer quantidade) {
+        super();
+        this.notaCompra = notaCompra;
+        this.produto = produto;
+        this.valorCompraProduto = valorCompraProduto;
+        this.quantidade = quantidade;
+    }
 
-	public void setProduto(Produto produto) {
-		this.produto = produto;
-	}
+    public BigDecimal getCalculoTotalItem() {
+        return valorCompraProduto.multiply(BigDecimal.valueOf(quantidade));
+    }
 
-	public BigDecimal getValorCompraProduto() {
-		return valorCompraProduto;
-	}
+    //acessores
+    public Long getId() {
+        return id;
+    }
 
-	public void setValorCompraProduto(BigDecimal valorCompraProduto) {
-		this.valorCompraProduto = valorCompraProduto;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Integer getQuantidade() {
-		return quantidade;
-	}
+    public BigDecimal getValorCompraProduto() {
+        return valorCompraProduto;
+    }
 
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
+    public void setValorCompraProduto(BigDecimal valorCompraProduto) {
+        this.valorCompraProduto = valorCompraProduto;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+    public Integer getQuantidade() {
+        return quantidade;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		NotaCompraItem other = (NotaCompraItem) obj;
-		return id == other.id;
-	}
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
 
-	@Override
-	public String toString() {
-		return "NotaCompraItem [id=" + id + ", valorCompraProduto=" + valorCompraProduto + ", quantidade=" + quantidade
-				+ "]";
-	}
-	
-	
+    public NotaCompra getNotaCompra() {
+        return notaCompra;
+    }
+
+    public void setNotaCompra(NotaCompra notaCompra) {
+        this.notaCompra = notaCompra;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NotaCompraItem that = (NotaCompraItem) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "NotaCompraItem[" +
+                "id=" + id +
+                ", valorCompraProduto=" + valorCompraProduto +
+                ", quantidade=" + quantidade +
+                ", notaCompra=" + notaCompra +
+                ", produto=" + produto +
+                ']';
+    }
 }
